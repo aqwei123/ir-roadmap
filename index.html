@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RMB IR × AI Agent 路线图</title>
+<style>
+  :root {
+    --primary: #1a1a2e;
+    --accent: #e63946;
+    --accent-light: #fff0f0;
+    --green: #2d6a4f;
+    --green-light: #d8f3dc;
+    --yellow: #b08018;
+    --yellow-light: #fff8e1;
+    --blue: #1d3557;
+    --blue-light: #e8f0fe;
+    --gray-50: #fafafa;
+    --gray-100: #f5f5f5;
+    --gray-200: #eeeeee;
+    --gray-300: #e0e0e0;
+    --gray-500: #9e9e9e;
+    --gray-700: #616161;
+    --gray-900: #212121;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-900);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, #16213e 100%);
+    color: white;
+    padding: 48px 0 40px;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 400;
+  }
+  .header .date-tag {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 14px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 20px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Stats Banner */
+  .stats-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: -32px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .stat-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .stat-number {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-unit {
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: 6px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 48px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .section-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .section-badge {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  /* Paradigm shift */
+  .paradigm-shift {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+  .paradigm-box {
+    background: white;
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    box-shadow: var(--shadow);
+  }
+  .paradigm-box.old {
+    border-left: 4px solid var(--gray-300);
+    opacity: 0.7;
+  }
+  .paradigm-box.new {
+    border-left: 4px solid var(--green);
+    box-shadow: var(--shadow-md);
+  }
+  .paradigm-box h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .paradigm-box ul {
+    list-style: none;
+    font-size: 14px;
+    color: var(--gray-700);
+  }
+  .paradigm-box ul li {
+    padding: 4px 0;
+    padding-left: 20px;
+    position: relative;
+  }
+  .paradigm-box ul li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--gray-500);
+  }
+  .paradigm-box.new ul li::before { color: var(--green); }
+  .paradigm-arrow {
+    font-size: 28px;
+    color: var(--gray-300);
+    font-weight: 300;
+  }
+
+  /* Landscape Map */
+  .landscape {
+    background: white;
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow);
+  }
+
+  /* Data Sources */
+  .data-sources {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .data-source-chip {
+    background: #fffde7;
+    border: 1px solid #fff9c4;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 120px;
+  }
+  .data-source-chip .sub {
+    font-size: 11px;
+    color: var(--gray-500);
+    margin-top: 2px;
+  }
+
+  .flow-arrow {
+    text-align: center;
+    padding: 8px 0;
+    color: var(--gray-300);
+    font-size: 20px;
+  }
+  .flow-label {
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray-500);
+    margin-bottom: 16px;
+  }
+
+  /* Process Grid */
+  .process-section {
+    margin-top: 8px;
+    margin-bottom: 20px;
+  }
+  .process-section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 10px;
+    padding-left: 8px;
+    border-left: 3px solid var(--gray-300);
+  }
+  .process-section-title.hot {
+    border-left-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .process-grid {
+    display: grid;
+    gap: 10px;
+  }
+  .process-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .process-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+
+  .process-card {
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 14px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .process-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+  }
+  .process-card .card-id {
+    font-weight: 700;
+    color: var(--blue);
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  .process-card .card-title {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .process-card .card-pain {
+    font-size: 11px;
+    color: var(--gray-500);
+    line-height: 1.5;
+  }
+  .process-card .ai-tag {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .ai-tag.now { background: var(--green-light); color: var(--green); }
+  .ai-tag.soon { background: var(--yellow-light); color: var(--yellow); }
+  .ai-tag.later { background: var(--blue-light); color: var(--blue); }
+  .ai-tag.done { background: #e8f5e9; color: #2e7d32; }
+
+  /* Detail always visible */
+  .card-detail {
+    display: block;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--gray-200);
+    font-size: 12px;
+    color: var(--gray-700);
+    line-height: 1.7;
+  }
+  .process-card {
+    border-color: var(--gray-200);
+    background: #fffbfc;
+  }
+
+  /* Roadmap Timeline */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .roadmap-phase {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border-top: 4px solid;
+    transition: transform 0.2s;
+  }
+  .roadmap-phase:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .roadmap-phase.phase-1 { border-color: var(--green); }
+  .roadmap-phase.phase-2 { border-color: var(--yellow); }
+  .roadmap-phase.phase-3 { border-color: var(--blue); }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .phase-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .phase-1 .phase-dot { background: var(--green); }
+  .phase-2 .phase-dot { background: var(--yellow); }
+  .phase-3 .phase-dot { background: var(--blue); }
+
+  .phase-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .phase-time {
+    font-size: 12px;
+    color: var(--gray-500);
+    margin-bottom: 16px;
+  }
+
+  .skill-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px;
+  }
+  .skill-item:last-child { border-bottom: none; }
+  .skill-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .phase-1 .skill-icon { background: var(--green-light); }
+  .phase-2 .skill-icon { background: var(--yellow-light); }
+  .phase-3 .skill-icon { background: var(--blue-light); }
+
+  .skill-name { font-weight: 600; }
+  .skill-desc { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+  .skill-who {
+    display: inline-block;
+    font-size: 11px;
+    background: var(--gray-100);
+    padding: 1px 8px;
+    border-radius: 10px;
+    color: var(--gray-700);
+    margin-top: 4px;
+  }
+  .skill-effect {
+    font-size: 11px;
+    color: var(--green);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* Division of Labor */
+  .labor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .labor-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .labor-card .labor-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .labor-card:nth-child(1) .labor-icon { background: var(--accent-light); }
+  .labor-card:nth-child(2) .labor-icon { background: var(--green-light); }
+  .labor-card:nth-child(3) .labor-icon { background: var(--blue-light); }
+  .labor-role {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .labor-who {
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .labor-desc {
+    font-size: 13px;
+    color: var(--gray-700);
+    line-height: 1.6;
+  }
+
+  /* Key message */
+  .key-message {
+    background: linear-gradient(135deg, var(--primary) 0%, #16213e 100%);
+    color: white;
+    border-radius: var(--radius);
+    padding: 24px 32px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .key-message h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .key-message p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+  .key-message .highlight {
+    color: white;
+    font-weight: 600;
+  }
+
+  /* Next Steps */
+  .next-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .step-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .step-num {
+    width: 28px;
+    height: 28px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .step-card h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .step-card p {
+    font-size: 13px;
+    color: var(--gray-700);
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 12px 0 8px;
+    font-size: 12px;
+    color: var(--gray-500);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .stats-banner { grid-template-columns: repeat(2, 1fr); }
+    .paradigm-shift { grid-template-columns: 1fr; }
+    .paradigm-arrow { transform: rotate(90deg); text-align: center; }
+    .roadmap { grid-template-columns: 1fr; }
+    .labor-grid { grid-template-columns: 1fr; }
+    .process-grid.cols-3, .process-grid.cols-5 { grid-template-columns: 1fr 1fr; }
+    .next-steps { grid-template-columns: 1fr; }
+    .header h1 { font-size: 24px; }
+    .stat-number { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="container">
+    <h1>IR × AI Agent 路线图</h1>
+    <div class="subtitle">从手工时代到 Agent 时代 — IR 工作效率的范式转换</div>
+    <div class="date-tag">2026年3月</div>
+  </div>
+</div>
+
+<!-- Stats Banner -->
+<div class="container">
+  <div class="stats-banner">
+    <div class="stat-card">
+      <div class="stat-number">27<span class="stat-unit">+天/年</span></div>
+      <div class="stat-label">仅报告分发预处理消耗的工作日</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">1,777</div>
+      <div class="stat-label">LP联系人，全部手工维护在Excel</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">18</div>
+      <div class="stat-label">个外部LP系统需手工填报</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">100<span class="stat-unit">%</span></div>
+      <div class="stat-label">全流程依赖人工，零自动化</div>
+    </div>
+  </div>
+
+  <!-- Paradigm Shift -->
+  <div class="section">
+    <div class="section-header">
+      <h2>认知转变</h2>
+      <span class="section-badge" style="background:var(--accent-light);color:var(--accent);">核心观点</span>
+    </div>
+    <div class="paradigm-shift">
+      <div class="paradigm-box old">
+        <h3>⛔ 旧思路：建系统</h3>
+        <ul>
+          <li>依赖IT/Data部门排期开发</li>
+          <li>需求沟通 → 开发 → 测试 → 上线，周期半年起</li>
+          <li>各方资源有限，排队等待</li>
+          <li>系统僵化，需求变了再改又要排期</li>
+        </ul>
+      </div>
+      <div class="paradigm-arrow">→</div>
+      <div class="paradigm-box new">
+        <h3>✅ 新思路：造 Skill</h3>
+        <ul>
+          <li>IR每个人自己用AI助手（Cowork）解决重复工作</li>
+          <li>不需要写代码，对话即可生成</li>
+          <li>不依赖任何外部资源，即做即用</li>
+          <li>需求变了随时调整，灵活响应</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Landscape Map -->
+  <div class="section">
+    <div class="section-header">
+      <h2>IR业务全景 × AI机会地图</h2>
+    </div>
+    <div class="landscape" style="padding:0;overflow:hidden;">
+
+      <!-- 概览层：浅灰底（数据输入 + ABCD全生命周期流程） -->
+      <div style="background:#f5f6f7;padding:24px 32px 24px;border-bottom:2px solid var(--gray-200);">
+        <div style="font-size:13px;font-weight:600;color:var(--gray-500);text-align:center;margin-bottom:10px;">数据输入源（目前全部依赖IR手工收集处理）</div>
+        <div class="data-sources">
+          <div class="data-source-chip">财务类数据<div class="sub">分配·估值·财报·审计</div></div>
+          <div class="data-source-chip">Legal数据<div class="sub">SL约定·回购条款·融资</div></div>
+          <div class="data-source-chip">项目数据<div class="sub">财务·人员·税收·获奖</div></div>
+          <div class="data-source-chip">LP沟通数据<div class="sub">邮件·组织变更·问询</div></div>
+          <div class="data-source-chip">公开信息<div class="sub">新闻稿·工商信息</div></div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-label" style="margin-bottom:20px;">邮件 / 微信 / 网盘 / 手动搜索收集，全部汇入IR同事手工处理</div>
+
+        <!-- ABCD全生命周期流程线 -->
+        <div style="font-size:12px;font-weight:600;color:var(--gray-500);text-align:center;margin-bottom:10px;letter-spacing:0.5px;">LP 全生命周期业务流程</div>
+        <div style="display:flex;align-items:stretch;gap:0;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.1);">
+          <div style="flex:1;padding:12px 14px;background:white;border-right:1px solid #e0e0e0;">
+            <div style="font-size:11px;font-weight:700;color:#9e9e9e;letter-spacing:0.5px;">A</div>
+            <div style="font-size:13px;font-weight:600;color:#424242;margin-top:2px;">潜在LP挖掘</div>
+            <div style="font-size:11px;color:#9e9e9e;margin-top:3px;">募资前期</div>
+          </div>
+          <div style="display:flex;align-items:center;padding:0 6px;background:white;border-right:1px solid #e0e0e0;color:#bdbdbd;font-size:16px;">›</div>
+          <div style="flex:1;padding:12px 14px;background:white;border-right:1px solid #e0e0e0;">
+            <div style="font-size:11px;font-weight:700;color:#9e9e9e;letter-spacing:0.5px;">B</div>
+            <div style="font-size:13px;font-weight:600;color:#424242;margin-top:2px;">募资签约</div>
+            <div style="font-size:11px;color:#9e9e9e;margin-top:3px;">文件流转</div>
+          </div>
+          <div style="display:flex;align-items:center;padding:0 6px;background:#fff5f5;border-right:1px solid #e0e0e0;color:#bdbdbd;font-size:16px;">›</div>
+          <div style="flex:2;padding:12px 14px;background:#fff5f5;border-right:1px solid #e0e0e0;">
+            <div style="font-size:11px;font-weight:700;color:#e63946;letter-spacing:0.5px;">C &nbsp;★ 最大痛点区</div>
+            <div style="font-size:13px;font-weight:600;color:#e63946;margin-top:2px;">募后管理与服务</div>
+            <div style="font-size:11px;color:#e07070;margin-top:3px;">LP信息 · 报告分发 · 个性化报表 · 系统填报 · 会议协同</div>
+          </div>
+          <div style="display:flex;align-items:center;padding:0 6px;background:white;color:#bdbdbd;font-size:16px;">›</div>
+          <div style="flex:1;padding:12px 14px;background:white;">
+            <div style="font-size:11px;font-weight:700;color:#9e9e9e;letter-spacing:0.5px;">D</div>
+            <div style="font-size:13px;font-weight:600;color:#424242;margin-top:2px;">LP沟通维护</div>
+            <div style="font-size:11px;color:#9e9e9e;margin-top:3px;">关系管理</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 展开明细层：白底 -->
+      <div style="padding:24px 32px 32px;">
+      <div style="font-size:12px;color:var(--gray-500);margin-bottom:20px;text-align:center;">↓ &nbsp;各环节详细说明与 AI 机会</div>
+
+      <!-- a. LP挖掘 -->
+      <div class="process-section">
+        <div class="process-section-title">a · 潜在LP挖掘与拓展</div>
+        <div class="process-grid" style="grid-template-columns:1fr;">
+          <div class="process-card">
+            <div class="card-title">手工调研与分析</div>
+            <div class="card-pain">现状：依赖人脉和手工信息检索</div>
+            <span class="ai-tag later">远期探索</span>
+            <div class="card-detail">
+              <strong>AI机会：</strong>公开信息自动监测、LP画像匹配推荐。此项为募资核心领域，AI介入空间目前有限，建议放入远期探索。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- b. 募资签约 -->
+      <div class="process-section">
+        <div class="process-section-title">b · 募资签约与文件流转</div>
+        <div class="process-grid cols-3">
+          <div class="process-card">
+            <div class="card-id">b-1</div>
+            <div class="card-title">募集进度管理</div>
+            <div class="card-pain">手工跟踪"接洽→尽调→谈判→KYC→签约"全流程</div>
+            <span class="ai-tag soon">近期可做</span>
+            <div class="card-detail">
+              <strong>AI机会：</strong>进度状态自动追踪与提醒，关键节点预警。<br>
+              <strong>Skill思路：</strong>基于Excel进度表自动生成进度报告和待办提醒。
+            </div>
+          </div>
+          <div class="process-card">
+            <div class="card-id">b-2</div>
+            <div class="card-title">签约文件检查与追补</div>
+            <div class="card-pain">手工核查涉及的几十份文件齐备性，向LP追补</div>
+            <span class="ai-tag soon">近期可做</span>
+            <div class="card-detail">
+              <strong>AI机会：</strong>自动比对文件清单，识别缺失项，生成追补邮件草稿。<br>
+              <strong>Skill思路：</strong>输入LP签约文件夹 → AI核查齐备性 → 输出缺失清单+追补邮件。
+            </div>
+          </div>
+          <div class="process-card">
+            <div class="card-id">b-3</div>
+            <div class="card-title">内部文件流转</div>
+            <div class="card-pain">手工将签约文件发送给法务/财务</div>
+            <span class="ai-tag later">远期探索</span>
+            <div class="card-detail">
+              <strong>AI机会：</strong>需结合内部系统集成，目前手工转发即可，优先级较低。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- c. 募后管理 -->
+      <div class="process-section">
+        <div class="process-section-title hot">c · 募后管理与服务 — 最大痛点区</div>
+        <div class="process-grid cols-5">
+          <div class="process-card">
+            <div class="card-id">c-1</div>
+            <div class="card-title">LP信息管理</div>
+            <div class="card-pain">Excel维护70家机构LP/160家个人LP，每家22字段；1777+联系人每人25字段</div>
+            <span class="ai-tag now">现在就能做</span>
+            <div class="card-detail">
+              <strong>AI机会：</strong>数据清洗标准化、变更提醒、批量格式转换。<br>
+              <strong>Cowork Skill：</strong>将现有Excel数据清洗为青鸟系统导入格式，一次性激活分发平台。<br>
+              <strong>备注：</strong>青鸟系统上线后仍需人工操作（比以前方便，但还不能一句话发邮件）。后续可探索将青鸟系统接入MCP，实现对话式直接完成分发任务。
+            </div>
+          </div>
+          <div class="process-card">
+            <div class="card-id">c-2</div>
+            <div class="card-title">报告分发</div>
+            <div class="card-pain">年耗27+工作日手工制表<br>包含两个独立需求 ↓</div>
+            <span class="ai-tag now">现在就能做</span>
+            <div class="card-detail">
+              <strong>需求①：日常水印加密（Ad-hoc）</strong><br>
+              任何IR同事随时要发文件给LP，都需手动打个性化水印+加密。→ <strong>Cowork Skill</strong>，所有IR同事可用，从10分钟/份→30秒。<br><br>
+              <strong>需求②：定期批量分发（季度/半年度）</strong><br>
+              青鸟系统已在测试阶段（Data组开发），卡点是LP初始数据导入 → AI辅助数据整理解决。<br><br>
+              <em>注意：两个需求独立，水印Skill不依赖青鸟系统。</em>
+            </div>
+          </div>
+          <div class="process-card">
+            <div class="card-id">c-3</div>
+            <div class="card-title">个性化报表生成</div>
+            <div class="card-pain">偿二代险资表格（~5-10家）、LP定制报告（~20份/季度），按不同LP模板手工填充</div>
+            <span class="ai-tag now">现在就能做</span>
+            <div class="card-detail">
+              <strong>偿二代报表：</strong>IR从各部门获取Excel数据 → 手动填入各险资LP的固定模板。每家模板不同但固定，最适合自动化。<br>
+              <strong>LP定制报告：</strong>来源为邮件信息及Excel数据，按不同LP模板自动排版生成初稿。<br>
+              <strong>Cowork Skill：</strong>上传原始数据+LP模板 → AI自动填充生成。<br>
+              <strong>使用者：</strong>负责对应险资LP/机构LP的同事各自使用。
+            </div>
+          </div>
+          <div class="process-card">
+            <div class="card-id">c-4</div>
+            <div class="card-title">LP系统填报</div>
+            <div class="card-pain">手工填报13家LP的18个系统，各系统100-300项目/20-70字段</div>
+            <span class="ai-tag soon">近期可做</span>
+            <div class="card-detail">
+              <strong>AI机会：</strong>从内部数据自动提取对应字段，预填各LP系统的填报内容。<br>
+              <strong>复杂度：</strong>中等——需要逐个理解各LP系统的字段映射关系。<br>
+              <strong>使用者：</strong>负责各LP系统填报的对接人。
+            </div>
+          </div>
+          <div class="process-card">
+            <div class="card-id">c-5</div>
+            <div class="card-title">LP会议协同管理</div>
+            <div class="card-pain">Syndication call / dial-in 通知起草、材料分发、LP问题清单整理、会议纪要等</div>
+            <span class="ai-tag soon">近期可做</span>
+            <div class="card-detail">
+              <strong>AI机会：</strong>自动起草会议通知邮件（含dial-in信息）、整理LP问题清单、会议后自动生成纪要和待办。<br>
+              <strong>Skill思路：</strong>输入会议基本信息 → AI生成通知及分发材料；上传录音/笔记 → AI整理纪要。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- d. LP沟通 -->
+      <div class="process-section">
+        <div class="process-section-title">d · LP沟通与关系维护</div>
+        <div class="process-grid cols-3">
+          <div class="process-card">
+            <div class="card-id">d-1</div>
+            <div class="card-title">节假日问候</div>
+            <div class="card-pain">手动编辑发送，难以个性化</div>
+            <span class="ai-tag soon">近期可做</span>
+            <div class="card-detail">
+              <strong>AI机会：</strong>批量生成个性化问候（考虑LP背景、历史互动、时令节点）。<br>
+              <strong>Skill思路：</strong>输入LP清单 → AI按每个LP的特点生成个性化问候文案。
+            </div>
+          </div>
+          <div class="process-card">
+            <div class="card-id">d-2</div>
+            <div class="card-title">互动频率监测</div>
+            <div class="card-pain">缺乏有效工具跟踪与各LP的互动频率</div>
+            <span class="ai-tag later">远期探索</span>
+            <div class="card-detail">
+              <strong>AI机会：</strong>需要数据积累后才能实现。基于邮件/会议记录自动统计互动频率，预警"冷落"的重要LP。
+            </div>
+          </div>
+          <div class="process-card">
+            <div class="card-id">d-3</div>
+            <div class="card-title">国内Insights分享至QFLP</div>
+            <div class="card-pain">手动整理分享内容</div>
+            <span class="ai-tag soon">近期可做</span>
+            <div class="card-detail">
+              <strong>AI机会：</strong>从内部信息源自动提取、翻译、整理insights摘要。<br>
+              <strong>Skill思路：</strong>输入原始内容 → AI整理为适合QFLP阅读的简报格式。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 内部知识储备 -->
+      <div class="process-section">
+        <div class="process-section-title">内部知识储备</div>
+        <div class="process-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="process-card">
+            <div class="card-title">Dashboard数据汇总</div>
+            <div class="card-pain">新基金募资进展、LP投资全景等</div>
+            <span class="ai-tag later">远期探索</span>
+            <div class="card-detail">需要跨系统数据集成后才能实现自动化Dashboard生成。</div>
+          </div>
+          <div class="process-card">
+            <div class="card-title">LP重要异动追踪</div>
+            <div class="card-pain">依赖IR同事记忆和手动翻找</div>
+            <span class="ai-tag later">远期探索</span>
+            <div class="card-detail">需要积累结构化LP数据后，AI可自动追踪和预警重要变化。</div>
+          </div>
+        </div>
+      </div>
+
+      </div><!-- end 业务流程层 -->
+    </div><!-- end landscape -->
+  </div>
+
+  <!-- Roadmap -->
+  <div class="section">
+    <div class="section-header">
+      <h2>三层实施路线</h2>
+    </div>
+    <div class="roadmap">
+
+      <!-- Phase 1 -->
+      <div class="roadmap-phase phase-1">
+        <div class="phase-header">
+          <div class="phase-dot"></div>
+          <div class="phase-title">现在就能做</div>
+        </div>
+        <div class="phase-time">Cowork Skill · IR自助 · 即做即用</div>
+
+        <div class="skill-item">
+          <div class="skill-icon">🔒</div>
+          <div>
+            <div class="skill-name">PDF水印 + 加密</div>
+            <div class="skill-desc">发文件给LP前一键打个性化水印并加密</div>
+            <div class="skill-who">所有IR同事</div>
+            <div class="skill-effect">10分钟/份 → 30秒</div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-icon">📊</div>
+          <div>
+            <div class="skill-name">偿二代报表填充</div>
+            <div class="skill-desc">从原始数据按各险资LP模板自动生成报表</div>
+            <div class="skill-who">对应险资LP对接人</div>
+            <div class="skill-effect">半天/家 → 几分钟</div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-icon">📄</div>
+          <div>
+            <div class="skill-name">LP定制报告生成</div>
+            <div class="skill-desc">通用素材按不同LP模板自动排版</div>
+            <div class="skill-who">各LP对接人</div>
+            <div class="skill-effect">2小时/份 → 10分钟</div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-icon">🗄️</div>
+          <div>
+            <div class="skill-name">青鸟数据初始化</div>
+            <div class="skill-desc">将现有Excel清洗为青鸟系统导入格式</div>
+            <div class="skill-who">一次性任务</div>
+            <div class="skill-effect">解锁批量分发系统</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="roadmap-phase phase-2">
+        <div class="phase-header">
+          <div class="phase-dot"></div>
+          <div class="phase-title">近期可做</div>
+        </div>
+        <div class="phase-time">3-6个月 · 需要场景摸索积累</div>
+
+        <div class="skill-item">
+          <div class="skill-icon">📋</div>
+          <div>
+            <div class="skill-name">LP系统填报辅助</div>
+            <div class="skill-desc">从内部数据自动预填各LP系统表格</div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-icon">✅</div>
+          <div>
+            <div class="skill-name">签约文件齐备性检查</div>
+            <div class="skill-desc">自动核查文件完整性，生成追补清单</div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-icon">📦</div>
+          <div>
+            <div class="skill-name">Syndication Call 协同管理</div>
+            <div class="skill-desc">自动起草dial-in通知、分发材料、整理LP问题清单</div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-icon">📝</div>
+          <div>
+            <div class="skill-name">会议纪要自动生成</div>
+            <div class="skill-desc">LP电话会/会议后整理纪要和待办</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="roadmap-phase phase-3">
+        <div class="phase-header">
+          <div class="phase-dot"></div>
+          <div class="phase-title">远期愿景</div>
+        </div>
+        <div class="phase-time">需要数据积累和系统集成</div>
+
+        <div class="skill-item">
+          <div class="skill-icon">👤</div>
+          <div>
+            <div class="skill-name">LP关系画像</div>
+            <div class="skill-desc">互动频率、敏感度、特殊关切分析</div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-icon">💬</div>
+          <div>
+            <div class="skill-name">LP问询智能回复</div>
+            <div class="skill-desc">基于历史披露文件生成回复草稿</div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-icon">🔗</div>
+          <div>
+            <div class="skill-name">跨系统数据集成</div>
+            <div class="skill-desc">与财务系统、投资系统打通</div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-icon">📡</div>
+          <div>
+            <div class="skill-name">LP动态监测</div>
+            <div class="skill-desc">政策变化、险资动向、审批节点</div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-icon">🎯</div>
+          <div>
+            <div class="skill-name">潜在LP智能匹配</div>
+            <div class="skill-desc">公开信息监测与LP画像匹配</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Division of Labor -->
+  <div class="section">
+    <div class="section-header">
+      <h2>推进方式</h2>
+    </div>
+    <div class="labor-grid">
+      <div class="labor-card">
+        <div class="labor-icon">🔍</div>
+        <div class="labor-role">人人都是探索者</div>
+        <div class="labor-who">所有IR同事</div>
+        <div class="labor-desc">每个人都可以探索自己工作中的AI路径，发现了好用的方法就分享出来，大家共同积累</div>
+      </div>
+      <div class="labor-card">
+        <div class="labor-icon">🛠️</div>
+        <div class="labor-role">从自己的痛点出发</div>
+        <div class="labor-who">各IR同事</div>
+        <div class="labor-desc">针对自己负责的场景动手探索——只有本人最了解自己的业务细节和模板，AI工具用起来才顺手</div>
+      </div>
+      <div class="labor-card">
+        <div class="labor-icon">💡</div>
+        <div class="labor-role">技术支持</div>
+        <div class="labor-who">IT / Data同事（按需咨询）</div>
+        <div class="labor-desc">遇到技术瓶颈时提供咨询帮助，非日常参与</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Message -->
+  <div class="key-message">
+    <h3>Agent时代，最大的变化是——</h3>
+    <p>
+      <span class="highlight">不需要建系统了。</span>每个IR同事自己就能用AI解决重复工作。<br>
+      先从<span class="highlight">最痛的几件事</span>开始，逐步推进。
+    </p>
+  </div>
+
+  <!-- Next Steps -->
+  <div class="section">
+    <div class="section-header">
+      <h2>下一步行动</h2>
+    </div>
+    <div class="next-steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h4>做一个Demo</h4>
+        <p>以"PDF水印+加密"为示范Skill，演示Cowork如何在30秒内完成过去10分钟的手工操作。顺带演示加完水印后一键在Outlook草稿箱生成各LP对应邮件并自动附上文件，检查无误后直接发送。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h4>各自探索AI路径</h4>
+        <p>每位IR同事针对自己负责的工作，用Cowork探索AI能帮上忙的切入点——因为只有本人最了解自己的业务细节和实际痛点。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h4>月度复盘迭代</h4>
+        <p>每月汇总各Skill的使用效果和节省时间，持续优化。按路线图推进到下一批场景。</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  IR × AI Agent 路线图 · 2026年3月 · Internal Use Only
+</div>
+
+<script>
+function toggleCard(el) {
+  el.classList.toggle('expanded');
+}
+</script>
+
+</body>
+</html>
